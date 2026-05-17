@@ -1,0 +1,55 @@
+select * from user;
+create database db_products;
+
+use db_products;
+
+create table tbl_products(
+id int auto_increment primary key,
+product_id varchar(256) unique key, 
+product_name varchar(256),
+category int,
+sku varchar(256),
+stock_quantity int,
+unit_price decimal(10,2),
+status int,
+Description varchar(1024),
+created_at timestamp default current_timestamp
+);
+
+create table tbl_category(
+id int primary key auto_increment,
+category_name varchar(256),
+created_at timestamp default current_timestamp 
+);
+
+insert into tbl_category(category_name)
+values('Electronics')
+,('Clothing'), ('Furniture'), ('Books'), ('Other');
+
+
+select p.id, p.product_id, p.product_name, p.category, c.category_name, p.sku, p.stock_quantity, p.unit_price, p.status, p.Description, p.created_at
+from tbl_products p
+join tbl_category c on p.category = c.id
+where p.product_name like '%lap%' or c.category_name like '%lap%'
+ORDER BY p.id
+limit 2 offset 0;
+
+select * from tbl_products;
+select count(product_id) as totalproducts from tbl_products;
+
+select sum(stock_quantity) as totalstock from tbl_products;
+
+select sum(stock_quantity * unit_price) as inventoryvalue from tbl_products;
+
+select count(product_id) from tbl_products where status = 1;
+
+SELECT 
+    COUNT(p.id) as product_count, 
+    p.category, 
+    c.category_name
+FROM tbl_products p
+JOIN tbl_category c ON p.category = c.id
+GROUP BY p.category, c.category_name
+ORDER BY product_count DESC;
+
+
